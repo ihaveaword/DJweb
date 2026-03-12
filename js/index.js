@@ -15,11 +15,11 @@ let conversationHistory = [];
 
 // AI 回复数据库（备用/离线模式）
 const aiResponses = {
-    '介绍一下你自己': '你好！我是ZHY，华北电力大学信息与通信工程专业的研究生。我专注于计算机视觉和AI开发，特别是视觉语言模型(VLM)、开放词汇目标检测(OVD)等前沿领域。我是华为认证的HCIP-AI Ascend开发者，热爱将理论知识转化为实际应用。',
+    '介绍一下你自己': '你好！我是董晶，华北电力大学英语语言文学专业的硕士研究生。',
     '你的技能和专长是什么？': '我的核心技能包括：\n\n• **视觉语言模型**: CLIP, YOLO-World, Vision Transformer (ViT)等，擅长多模态数据处理、模型微调和推理\n• **目标检测**: 精通YOLO系列(v5/v8/v11)、Faster R-CNN、DETR，具备OVD课题经验\n• **深度学习框架**: 熟悉PyTorch生态，了解TensorFlow/Mindspore\n• **开发环境**: 熟练Linux/MacOS、Docker容器化、Conda/venv环境管理、Tmux\n• **版本控制**: 精通Git、GitHub/GitLab、飞书协作、Lazygit\n• **开发工具**: VS Code、PyCharm、Jupyter Notebook\n• **数据处理**: OpenCV、Pillow图像处理，Labelme、CVAT数据标注\n• **可视化**: Matplotlib、OpenCV (cv2)\n• **编程语言**: Python (主力)、C (模型部署优化)\n\nGPA 90.264，专业排名5/39。',
     '展示你的证书和荣誉': '我很高兴向你展示我的成就时间线！这些证书和荣誉记录了我的成长轨迹：\n\n📅 **2025年**\n• 🏆 HCIP-AI-Ascend Developer 认证 - 华为认证ICT高级工程师，专注于AI-Ascend开发方向\n• 🔧 AscendC 算子开发能力认证（中级）- 华为昇腾微认证，掌握自定义算子开发与优化\n• 🥉 第八届全国大学生嵌入式芯片与系统设计竞赛 北部赛区三等奖 - 担任队长，负责代码设计、模型权重导出部署、小车调试等\n• 📜 全国计算机等级考试三级 - 网络技术方向，成绩优秀\n\n📅 **2024年**\n• 🥈 第十二届全国大学生新一代信息通信技术大赛 河北省二等奖 - 担任队员，负责撰写方案设计书\n• ⭐ 优秀研究生 - 华北电力大学2024-2025学年，表彰在思想品德、学业成绩、科研能力等方面表现突出\n• 🎓 研究生学业奖学金 - GPA 90.264，专业排名 5/39，展现了扎实的学术功底\n\n📅 **2023年**\n• 📜 全国计算机等级考试二级 - MS Office 高级应用，为数据处理打下基础\n\n📅 **2021年**\n• 🌐 大学英语六级 (CET-6) - 成绩 445 分，具备良好的英语阅读能力\n\n📅 **2020年**\n• 🌐 大学英语四级 (CET-4) - 成绩 532 分，英语基础扎实\n\n💡 **总计**: 4项专业认证 + 2项竞赛获奖 + 2项学术荣誉 + 2项语言证书\n\n想了解更多详情？点击导航栏的 "ls ./certificates" 查看完整的证书展示页面，那里有更详细的介绍和可视化时间线！',
     '如何联系你？': '很高兴你想要联系我！你可以通过以下方式与我取得联系：\n\n📧 **邮箱**: z13503876281@163.com\n🎓 **学校**: 华北电力大学\n **地点**: 北京, 中国\n🐙 **GitHub**: https://github.com/ihaveaword\n📝 **CSDN**: https://blog.csdn.net/ZHY0091\n\n我通常在24小时内回复邮件。期待与你交流！',
-    'default': '这是一个很好的问题！作为ZHY的AI助手，我可以回答关于他的技能、项目、证书和联系方式的问题。\n\n你可以问我：\n• 关于他的专业背景和研究方向\n• 他的技能和专长\n• 他获得的证书和荣誉\n• 如何联系他\n\n或者你可以点击上面的快速问题按钮来开始对话！'
+    'default': '这是一个很好的问题！作为董晶的AI助手，我可以回答关于她的专业背景、证书和联系方式的问题。\n\n你可以问我：\n• 关于她的专业背景\n• 她获得的证书和荣誉\n• 如何联系她\n\n或者你可以点击上面的快速问题按钮来开始对话！'
 };
 
 // ========== 页面初始化 ==========
@@ -272,7 +272,7 @@ function initAIChat() {
 
         // 简单的关键词匹配
         if (userMessage.includes('你好') || userMessage.includes('嗨') || userMessage.includes('hi') || userMessage.includes('hello')) {
-            return '你好！很高兴见到你！我可以帮你了解更多关于ZHY的信息。有什么我可以帮助你的吗？';
+            return '你好！很高兴见到你！我可以帮你了解更多关于董晶的信息。有什么我可以帮助你的吗？';
         }
         if (userMessage.includes('技能') || userMessage.includes('能力') || userMessage.includes('专长')) {
             return aiResponses['你的技能和专长是什么？'];
@@ -287,13 +287,13 @@ function initAIChat() {
             return aiResponses['如何联系你？'];
         }
         if (userMessage.includes('学校') || userMessage.includes('大学') || userMessage.includes('学历')) {
-            return 'ZHY目前是华北电力大学信息与通信工程专业的研究生（2024-2027），本科也是在华北电力大学就读（2020-2024）。专业方向是计算机视觉和AI开发。';
+            return '董晶目前是华北电力大学英语语言文学专业的硕士研究生。';
         }
         if (userMessage.includes('研究') || userMessage.includes('方向') || userMessage.includes('专业')) {
-            return 'ZHY的研究方向主要集中在：\n\n• 计算机视觉 (Computer Vision)\n• 视觉语言模型 (VLM)\n• 视觉语言预训练 (VLP)\n• 目标检测 (Object Detection)\n• 开放词汇检测 (OVD)\n\n这些都是当前AI领域非常前沿的研究方向！';
+            return '董晶的专业方向是英语语言文学，就读于华北电力大学。';
         }
         if (userMessage.includes('代码') || userMessage.includes('编程')) {
-            return '我很喜欢编程！这是一个简单的Python示例：\n\n```python\ndef detect_object(image):\n    # 使用计算机视觉模型进行目标检测\n    model = load_model("yolo_v8")\n    results = model.predict(image)\n    return results\n```\n\nZHY主要使用Python进行AI开发，也熟悉Web开发技术。';
+            return '欢迎向我提问关于董晶的更多信息！';
         }
 
         return aiResponses['default'];

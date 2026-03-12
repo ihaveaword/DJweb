@@ -340,7 +340,7 @@ function openStudentPage() {
 function showConsoleWelcome() {
     console.log('%c' + `
 ╔═══════════════════════════════════════╗
-║  Welcome to ZHY's Terminal Website   ║
+║  Welcome to 董晶's Terminal Website  ║
 ║  Type: help for available commands   ║
 ║  Status: ONLINE | Version: 1.0.0     ║
 ╚═══════════════════════════════════════╝
