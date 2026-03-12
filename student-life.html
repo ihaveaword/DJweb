@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 关键：内联样式必须在所有外部资源之前，防止闪烁 -->
+    <style>
+        /* 统一淡蓝色背景 - 在外部CSS加载前生效 */
+        html,
+        html body {
+            background-color: #e6f2ff !important;
+        }
+
+        /* 浅色主题文字颜色 */
+        html[data-theme="light"],
+        html[data-theme="light"] body {
+            color: #1a1a1a !important;
+        }
+
+        /* 深色主题文字颜色 */
+        html:not([data-theme="light"]),
+        html:not([data-theme="light"]) body {
+            color: #1a1a1a;
+        }
+    </style>
+    <!-- 主题初始化：在页面渲染前设置 -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <title>Student Days | Memory Archive</title>
+
+    <!-- Favicon - 多尺寸支持 -->
+    <link rel="apple-touch-icon" sizes="57x57" href="favicon.ico/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicon.ico/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favicon.ico/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favicon.ico/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favicon.ico/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favicon.ico/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favicon.ico/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favicon.ico/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.ico/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.ico/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon.ico/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.ico/favicon-16x16.png">
+    <link rel="manifest" href="favicon.ico/manifest.json">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="favicon.ico/ms-icon-144x144.png">
+    <meta name="theme-color" content="#00ff00">
+
+    <!-- Fonts -->
+    <!-- Use system fonts for best performance -->
+
+    <!-- Icons -->
+    <!-- Font Awesome - 国内 CDN 优先，失败则使用本地备份 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        onerror="this.onerror=null;this.href='vendor/fontawesome/css/all.min.css'">
+
+    <!-- Custom CSS - 先加载公共样式，再加载页面专用样式 -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/student-life.css">
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-logo">
+                <a href="index.html">root@ihave:~#</a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">首页 | Home</a></li>
+                <li><a href="student-life.html" class="active">学生时代 | Student Life</a></li>
+                <li><a href="certificates.html">证书荣誉 | Certificates</a></li>
+                <li><a href="index.html#portfolio">作品集 | Portfolio</a></li>
+                <li><a href="index.html#contact">联系 | Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="菜单">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <header class="student-header">
+        <div class="container">
+            <h1 class="page-title">
+                <span class="command-prompt">$ cat</span> ./memories/student_days.log
+            </h1>
+            <p class="page-subtitle">// A journey through learning, growth, and unforgettable moments</p>
+        </div>
+    </header>
+
+    <!-- 时间线导航 - 目录式导航 -->
+    <nav class="timeline-nav" id="timeline-nav">
+        <div class="container">
+            <a href="#section-university" class="timeline-btn active">
+                <i class="fas fa-university"></i> <span class="btn-text-zh">复合背景</span><span
+                    class="btn-text-en">Interdisciplinary Background</span>
+            </a>
+            <a href="#section-high" class="timeline-btn">
+                <i class="fas fa-school"></i> <span class="btn-text-zh">专业足迹</span><span
+                    class="btn-text-en">Professional Journey</span>
+            </a>
+            <a href="#section-middle" class="timeline-btn">
+                <i class="fas fa-user-graduate"></i> <span class="btn-text-zh">实习高光</span><span
+                    class="btn-text-en">Internship Highlights</span>
+            </a>
+            <a href="#section-elementary" class="timeline-btn">
+                <i class="fas fa-child"></i> <span class="btn-text-zh">国际视野</span><span class="btn-text-en">Global
+                    Perspective</span>
+            </a>
+            <a href="#section-gallery" class="timeline-btn">
+                <i class="fas fa-images"></i> <span class="btn-text-zh">团队引领</span><span class="btn-text-en">Team
+                    Leadership</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="student-main">
+        <div class="container">
+
+            <!-- 大学时期 - 独立板块 -->
+            <section class="university-section" data-period="university" id="section-university">
+                <div class="university-header">
+                    <div class="header-decoration">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="header-content">
+                        <h1 class="university-title">复合背景</h1>
+                        <p class="university-subtitle">Interdisciplinary Background</p>
+                        <div class="header-line"></div>
+                    </div>
+                </div>
+                <!-- 左右分栏卡片设计 -->
+                <div class="dual-card-container">
+                    <!-- 左侧卡片：语言的艺术 -->
+                    <div class="dual-card language-card">
+                        <h2 class="card-title">
+                            <span class="card-title-zh">语言的艺术</span>
+                            <span class="card-title-en">The Art of Language</span>
+                        </h2>
+                        <div class="card-image-grid">
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片五.jpg', '图片五')">
+                                <img src="images/图片五.jpg" alt="图片五" class="card-image">
+                            </div>
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片六.jpg', '图片六')">
+                                <img src="images/图片六.jpg" alt="图片六" class="card-image">
+                            </div>
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片七.jpg', '图片七')">
+                                <img src="images/图片七.jpg" alt="图片七" class="card-image">
+                            </div>
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片八.jpg', '图片八')">
+                                <img src="images/图片八.jpg" alt="图片八" class="card-image">
+                            </div>
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片十一.jpg', '图片十一')">
+                                <img src="images/图片十一.jpg" alt="图片十一" class="card-image">
+                            </div>
+                        </div>
+                        <p class="card-quote">以语言为桥，通达世界。</p>
+                    </div>
+
+                    <!-- 右侧卡片：理工的思维 -->
+                    <div class="dual-card science-card">
+                        <h2 class="card-title">
+                            <span class="card-title-zh">理工的思维</span>
+                            <span class="card-title-en">The Logic of Science</span>
+                        </h2>
+                        <div class="card-image-grid">
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片九.jpg', '图片九')">
+                                <img src="images/图片九.jpg" alt="图片九" class="card-image">
+                            </div>
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片十.jpg', '图片十')">
+                                <img src="images/图片十.jpg" alt="图片十" class="card-image">
+                            </div>
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片十二.png', '图片十二')">
+                                <img src="images/图片十二.png" alt="图片十二" class="card-image">
+                            </div>
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片十三.jpg', '图片十三')">
+                                <img src="images/图片十三.jpg" alt="图片十三" class="card-image">
+                            </div>
+                            <div class="card-image-wrapper" onclick="openImageModal('images/图片十七.png', '图片十七')">
+                                <img src="images/图片十七.png" alt="图片十七" class="card-image">
+                            </div>
+                        </div>
+                        <p class="card-quote">以逻辑为骨，高效执行。</p>
+                    </div>
+                </div>
+        </div>
+        </div>
+        </section>
+
+        <!-- 高中时期 - 独立板块 -->
+        <section class="university-section" data-period="high" id="section-high">
+            <div class="university-header">
+                <div class="header-decoration">
+                    <i class="fas fa-school"></i>
+                </div>
+                <div class="header-content">
+                    <div class="header-title-wrapper">
+                        <div>
+                            <h1 class="university-title text-zh">专业足迹</h1>
+                            <h1 class="university-title text-en">Professional Journey</h1>
+                            <p class="university-subtitle text-zh">笔杆与策论 (Policy & Insight)</p>
+                            <p class="university-subtitle text-en">Policy & Insight</p>
+                        </div>
+                        <button class="lang-toggle-professional" id="professionalLangToggle">
+                            <span class="lang-option active" data-lang="zh">中文</span>
+                            <span class="lang-divider">|</span>
+                            <span class="lang-option" data-lang="en">EN</span>
+                        </button>
+                    </div>
+                    <div class="header-line"></div>
+                </div>
+            </div>
+            <!-- 杂志专栏风格展示 -->
+            <div class="editorial-layout-center">
+                <!-- 上方文字内容区域 -->
+                <div class="editorial-content-top">
+                    <div class="editorial-section" data-page="1">
+                        <h2 class="article-title text-zh">跨世纪对话：用亚里士多德悲剧理论解码《李尔王》的悲壮世界</h2>
+                        <h2 class="article-title text-en">Cross-Century Dialogue: Decoding the Tragic World of King Lear
+                            through Aristotle's Theory of Tragedy</h2>
+                        <p class="article-date">2025.03.12</p>
+                        <p class="article-authors">Dong Jing, Zhang Li</p>
+                        <p class="article-journal">Analysis of King Lear from the Perspective of Aristotle's Theory of
+                            Tragedy[J], Scholars International Journal of Linguistics and Literature. 2025, 3(1): 6-11.
+                        </p>
+                        <div class="article-highlight">
+                            <p class="text-zh">运用古典悲剧理论深度解析莎士比亚经典作品，展现跨文化文学研究的学术深度与理论功底。</p>
+                            <p class="text-en">Deeply analyzing Shakespeare's classic work through classical tragedy
+                                theory, demonstrating academic depth and theoretical foundation in cross-cultural
+                                literary research.</p>
+                        </div>
+                    </div>
+
+                    <div class="editorial-section" data-page="2">
+                        <h2 class="article-title text-zh">区域国别政策研究：美国大选政策风向分析</h2>
+                        <h2 class="article-title text-en">Regional and Country Policy Research: Analysis of U.S.
+                            Election Policy Trends</h2>
+                        <p class="article-date">2025.01</p>
+                        <p class="article-role text-zh">第一作者</p>
+                        <p class="article-role text-en">First Author</p>
+                        <div class="article-content">
+                            <p class="text-zh">撰写《特朗普二次上台政策风向及其对中国的影响》，刊载于保定市外事办内部核心刊物《外媒信息动态》（2025 第 1 期）<span
+                                    class="article-note">（前三位为指导老师）</span></p>
+                            <p class="text-en">Authored "Trump's Second Term Policy Trends and Their Impact on China,"
+                                published in Baoding Foreign Affairs Office's internal core publication "Foreign Media
+                                Information Dynamics" (Issue 1, 2025)<span class="article-note"> (First three authors
+                                    are supervisors)</span></p>
+                            <p class="text-zh">检索并研读大量外文一手信源，深度梳理美国共和党竞选纲领，为地方政府预判外部环境变化提供决策参考与政策建议。</p>
+                            <p class="text-en">Retrieved and studied extensive first-hand foreign language sources,
+                                deeply analyzed the U.S. Republican Party's campaign platform, providing decision-making
+                                references and policy recommendations for local governments to anticipate external
+                                environmental changes.</p>
+                        </div>
+                        <div class="article-highlight">
+                            <p class="text-zh">展现政策研究能力与区域国别分析的专业深度，为政府决策提供高质量信息支持。</p>
+                            <p class="text-en">Demonstrating policy research capabilities and professional depth in
+                                regional and country analysis, providing high-quality information support for government
+                                decision-making.</p>
+                        </div>
+                    </div>
+
+                    <div class="editorial-section" data-page="3">
+                        <h2 class="article-title text-zh">宏观经济形势分析：城市数字化转型战略对标</h2>
+                        <h2 class="article-title text-en">Macroeconomic Analysis: Strategic Benchmarking for Urban
+                            Digital Transformation</h2>
+                        <p class="article-date">2024.07</p>
+                        <p class="article-role text-zh">撰稿组长</p>
+                        <p class="article-role text-en">Lead Writer</p>
+                        <div class="article-content">
+                            <p class="text-zh">撰写《借鉴国际经验，助力保定数字化转型标杆城市建设》，收录于《外媒信息动态》（2024 第 3 期）<span
+                                    class="article-note">（前三位为指导老师）</span></p>
+                            <p class="text-en">Authored "Learning from International Experience to Support Baoding's
+                                Digital Transformation Benchmark City Construction," included in "Foreign Media
+                                Information Dynamics" (Issue 3, 2024)<span class="article-note"> (First three authors
+                                    are supervisors)</span></p>
+                            <p class="text-zh">对标国际智慧城市的建设案例，结合保定电力与制造产业特点，输出可行性分析报告，展现宏观经济视野与对标研究能力。</p>
+                            <p class="text-en">Benchmarked international smart city construction cases, combined with
+                                Baoding's power and manufacturing industry characteristics, produced feasibility
+                                analysis reports, demonstrating macroeconomic vision and benchmarking research
+                                capabilities.</p>
+                        </div>
+                        <div class="article-highlight">
+                            <p class="text-zh">体现宏观经济分析能力与战略对标研究水平，为城市发展提供专业建议。</p>
+                            <p class="text-en">Reflecting macroeconomic analysis capabilities and strategic benchmarking
+                                research level, providing professional recommendations for urban development.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中间图片滑动展示区域 -->
+                <div class="magazine-mockup-center">
+                    <div class="image-slider-container">
+                        <div class="image-slide slide-1 active">
+                            <img src="images/图片十八.png" alt="图片十八" class="slider-image">
+                        </div>
+                        <div class="image-slide slide-2">
+                            <img src="images/图片十五.png" alt="图片十五" class="slider-image">
+                        </div>
+                        <div class="image-slide slide-3">
+                            <img src="images/图片十四.png" alt="图片十四" class="slider-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 初中时期 - 独立板块 -->
+        <section class="university-section" data-period="middle" id="section-middle">
+            <div class="university-header">
+                <div class="header-decoration">
+                    <i class="fas fa-laptop"></i>
+                </div>
+                <div class="header-content">
+                    <div class="header-title-wrapper">
+                        <div>
+                            <h1 class="university-title text-zh">实习高光</h1>
+                            <h1 class="university-title text-en" style="display:none;">Internship Highlights</h1>
+                            <p class="university-subtitle text-zh">Internship Highlights</p>
+                            <p class="university-subtitle text-en" style="display:none;">Professional Internship
+                                Experience</p>
+                        </div>
+                        <button class="lang-toggle-professional" id="internshipLangToggle">
+                            <span class="lang-option active" data-lang="zh"
+                                onclick="toggleInternshipLang('zh')">中文</span>
+                            <span class="lang-divider">|</span>
+                            <span class="lang-option" data-lang="en" onclick="toggleInternshipLang('en')">EN</span>
+                        </button>
+                    </div>
+                    <div class="header-line"></div>
+                </div>
+            </div>
+            <!-- 实习高光时间线 -->
+            <div class="internship-timeline">
+                <!-- 时间线连接线 -->
+                <div class="timeline-line">
+                    <div class="timeline-arrow"></div>
+                </div>
+
+                <!-- 实习经历节点 - 按时间顺序 -->
+                <!-- 1. 2021.07-2021.08 上海译国译民翻译 -->
+                <div class="internship-node" data-index="1">
+                    <div class="node-marker"></div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <!-- 正面 -->
+                            <div class="flip-card-front">
+                                <div class="node-time">2021.07-2021.08</div>
+                                <div class="node-company text-zh">上海译国译民翻译服务有限公司</div>
+                                <div class="node-company text-en" style="display:none;">Shanghai Yiguoyimin Translation
+                                    Services Co., Ltd.</div>
+                                <div class="node-role text-zh">翻译实习生</div>
+                                <div class="node-role text-en" style="display:none;">Translation Intern</div>
+                                <div class="node-summary text-zh">优秀实习生 | 专业翻译 | 跨文化交际</div>
+                                <div class="node-summary text-en" style="display:none;">Outstanding Intern |
+                                    Professional Translation | Cross-Cultural Communication</div>
+                            </div>
+                            <!-- 背面 -->
+                            <div class="flip-card-back">
+                                <div class="node-details">
+                                    <h4 class="text-zh">详细经历</h4>
+                                    <h4 class="text-en" style="display:none;">Details</h4>
+                                    <p class="text-zh">翻译技能学习：通过向资深译员学习专业翻译知识，掌握翻译技巧，包括术语精准运用及跨文化交际能力；</p>
+                                    <p class="text-en" style="display:none;">Translation Skills: Learned professional
+                                        translation from senior translators; mastered terminology and cross-cultural
+                                        communication.</p>
+                                    <p class="text-zh">实习表现与荣誉：在相关培训及实习任务中表现突出，获得公司颁发的实习证明、优秀实习生称号及公司推荐信；</p>
+                                    <p class="text-en" style="display:none;">Performance & Awards: Excelled in training
+                                        tasks; received internship certificate, Outstanding Intern title, and a company
+                                        recommendation letter.</p>
+                                    <p class="text-zh">实践任务完成：参与实际翻译项目，完成多份文件的翻译与校对工作，确保内容准确、语言流畅，满足客户需求，积累了丰富的实践经验。</p>
+                                    <p class="text-en" style="display:none;">Practical Tasks: Participated in
+                                        translation projects; translated and proofread multiple documents accurately and
+                                        fluently, gaining extensive experience.</p>
+                                </div>
+                                <div class="node-certificate">
+                                    <!-- 图片重排：板块一显示旧板块四的图片（图片19.jpg） -->
+                                    <img src="images/图片19.jpg" alt="实习证书1" class="certificate-image lightbox-trigger"
+                                        data-src="images/图片19.jpg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 2024.03-2024.05 托克托县教育教学研究中心 -->
+                <div class="internship-node" data-index="2">
+                    <div class="node-marker"></div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <!-- 正面 -->
+                            <div class="flip-card-front">
+                                <div class="node-time">2024.03-2024.05</div>
+                                <div class="node-company text-zh">内蒙古自治区呼和浩特市托克托县教育教学研究中心</div>
+                                <div class="node-company text-en" style="display:none;">Tuoketuo County Education
+                                    Research Center, Hohhot, Inner Mongolia</div>
+                                <div class="node-role text-zh">教学研究员</div>
+                                <div class="node-role text-en" style="display:none;">Teaching Research Intern</div>
+                                <div class="node-summary text-zh">教学研究 | 教师培训 | 政策解读</div>
+                                <div class="node-summary text-en" style="display:none;">Teaching Research | Teacher
+                                    Training | Policy Interpretation</div>
+                            </div>
+                            <!-- 背面 -->
+                            <div class="flip-card-back">
+                                <div class="node-details">
+                                    <h4 class="text-zh">详细经历</h4>
+                                    <h4 class="text-en" style="display:none;">Details</h4>
+                                    <p class="text-zh">英语教学研究支持：协助中心开展县域内中小学英语教学研究，修订英语教学资料，优化教学资源的科学性和实用性；</p>
+                                    <p class="text-en" style="display:none;">English Teaching Research: Assisted in
+                                        English teaching research across primary and secondary schools; revised teaching
+                                        materials to improve scientific and practical quality.</p>
+                                    <p class="text-zh">教师培训活动组织：参与组织县域内英语教师培训活动，协助设计培训课程并担任部分授课任务；</p>
+                                    <p class="text-en" style="display:none;">Teacher Training: Helped organize English
+                                        teacher training events; assisted in designing courses and served as a part-time
+                                        instructor.</p>
+                                    <p class="text-zh">教育政策解读与宣传：协助撰写教育政策解读和宣传材料，确保内容准确、语言规范，符合教育政策导向，提升政策传播的清晰度和影响力。
+                                    </p>
+                                    <p class="text-en" style="display:none;">Policy Interpretation: Assisted in drafting
+                                        education policy documents; ensured accuracy and compliance, improving clarity
+                                        of policy communication.</p>
+                                </div>
+                                <div class="node-certificate">
+                                    <!-- 图片重排：板块二显示图片23.png -->
+                                    <img src="images/图片23.png" alt="实习证书2" class="certificate-image lightbox-trigger"
+                                        data-src="images/图片23.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 2024.05-2024.06 保定市人民政府外事办公室 -->
+                <div class="internship-node" data-index="3">
+                    <div class="node-marker"></div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <!-- 正面 -->
+                            <div class="flip-card-front">
+                                <div class="node-time">2024.05-2024.06</div>
+                                <div class="node-company text-zh">保定市人民政府外事办公室</div>
+                                <div class="node-company text-en" style="display:none;">Foreign Affairs Office, Baoding
+                                    Municipal People's Government</div>
+                                <div class="node-role text-zh">国际交流处外事联络与公文助理</div>
+                                <div class="node-role text-en" style="display:none;">Foreign Affairs Liaison & Document
+                                    Assistant, Dept. of International Exchanges</div>
+                                <div class="node-summary text-zh">外事接待 | 公文写作 | 政治素养</div>
+                                <div class="node-summary text-en" style="display:none;">Diplomatic Reception | Official
+                                    Document Writing | Political Competence</div>
+                            </div>
+                            <!-- 背面 -->
+                            <div class="flip-card-back">
+                                <div class="node-details">
+                                    <h4 class="text-zh">详细经历</h4>
+                                    <h4 class="text-en" style="display:none;">Details</h4>
+                                    <p class="text-zh">
+                                        外事接待与礼仪保障：全程参与俄罗斯代表团及政府领导在保定宴饮食博物馆的参观接待工作。负责外宾动线引导及现场翻译协调，展现出较强的政治素养与外事接待礼仪，确保涉外活动的严谨性与零失误。
+                                    </p>
+                                    <p class="text-en" style="display:none;">Diplomatic Reception: Participated in the
+                                        reception of a Russian delegation and government leaders at a museum in Baoding.
+                                        Responsible for guiding guests and coordinating on-site translation, ensuring
+                                        zero errors in foreign affairs procedures.</p>
+                                    <p class="text-zh">
+                                        公文写作与规范化处理：负责起草和规范化处理外事公函及往来邮件，严格遵循党政机关公文格式标准，熟练使用文档编辑工具对中日友好交流书画展等项目的双语材料进行排版与校对，确保文件传达的准确性与严肃性。
+                                    </p>
+                                    <p class="text-en" style="display:none;">Official Document Writing: Drafted and
+                                        standardized foreign affairs correspondence; strictly followed Party and
+                                        government document formatting norms; typeset and proofread bilingual materials
+                                        for China-Japan cultural exchange projects.</p>
+                                </div>
+                                <div class="node-certificate">
+                                    <!-- 图片重排：板块三显示旧板块一(图片20.png)和旧板块二(图片21.png) -->
+                                    <img src="images/图片20.png" alt="实习证书3a" class="certificate-image lightbox-trigger"
+                                        data-src="images/图片20.png">
+                                    <img src="images/图片21.png" alt="实习证书3b" class="certificate-image lightbox-trigger"
+                                        data-src="images/图片21.png" style="margin-top:0.5rem;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. 2024.10-2025.03 金吉列出国留学 -->
+                <div class="internship-node" data-index="4">
+                    <div class="node-marker"></div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <!-- 正面 -->
+                            <div class="flip-card-front">
+                                <div class="node-time">2024.10-2025.03</div>
+                                <div class="node-company text-zh">金吉列出国留学咨询服务有限公司</div>
+                                <div class="node-company text-en" style="display:none;">Jinjile Study Abroad Consulting
+                                    Services Co., Ltd.</div>
+                                <div class="node-role text-zh">文书顾问/行政助理</div>
+                                <div class="node-role text-en" style="display:none;">Document Consultant /
+                                    Administrative Assistant</div>
+                                <div class="node-summary text-zh">500+申请材料 | 5万字处理 | 零积压零延误</div>
+                                <div class="node-summary text-en" style="display:none;">500+ Applications | 50,000 Words
+                                    | Zero Backlog & Zero Delays</div>
+                            </div>
+                            <!-- 背面 -->
+                            <div class="flip-card-back">
+                                <div class="node-details">
+                                    <h4 class="text-zh">详细经历</h4>
+                                    <h4 class="text-en" style="display:none;">Details</h4>
+                                    <p class="text-zh">
+                                        高压环境下的多任务统筹与交付：负责英港爱事业部核心申请季的文书流转工作，在极度紧张的周期内，统筹管理并完成500+份申请材料（包括CV、推荐信、个人陈述）的标准化处理与合规审查。
+                                    </p>
+                                    <p class="text-en" style="display:none;">Multi-task Management Under Pressure:
+                                        Managed document processing for the UK/HK/Australia application season;
+                                        standardized and reviewed 500+ application materials (CVs, recommendation
+                                        letters, personal statements) within extremely tight deadlines.</p>
+                                    <p class="text-zh">
+                                        海量数据处理与执行力：累计处理中英文案字数达5万字，负责建立并维护包括300+份文档的项目台账。通过高效的时间管理和流程优化，确保所有申请材料"零积压、零延误"，展现出较强的执行韧性与抗压能力。
+                                    </p>
+                                    <p class="text-en" style="display:none;">Data Processing & Execution: Processed
+                                        50,000 words of Chinese-English documents; built and maintained a project ledger
+                                        with 300+ files. Achieved zero-backlog and zero-delay results through efficient
+                                        time management and process optimization.</p>
+                                </div>
+                                <div class="node-certificate">
+                                    <!-- 图片重排：板块四显示旧板块三的图片（图片22.png） -->
+                                    <img src="images/图片22.png" alt="实习证书4" class="certificate-image lightbox-trigger"
+                                        data-src="images/图片22.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 小学时期 - 独立板块 -->
+        <section class="university-section" data-period="elementary" id="section-elementary">
+            <div class="university-header">
+                <div class="header-decoration">
+                    <i class="fas fa-child"></i>
+                </div>
+                <div class="header-content">
+                    <div class="header-title-wrapper">
+                        <div>
+                            <h1 class="university-title text-zh">国际视野</h1>
+                            <h1 class="university-title text-en" style="display: none;">Global Perspective</h1>
+                            <p class="university-subtitle text-zh"></p>
+                            <p class="university-subtitle text-en" style="display: none;"></p>
+                        </div>
+                        <button class="lang-toggle-professional" id="travelLangToggle">
+                            <span class="lang-option active" data-lang="zh">中文</span>
+                            <span class="lang-divider">|</span>
+                            <span class="lang-option" data-lang="en">EN</span>
+                        </button>
+                    </div>
+                    <div class="header-line"></div>
+                </div>
+            </div>
+            <!-- 旅行相册容器 - 垂直正弦波布局 -->
+            <div class="travel-album-vertical">
+                <!-- 飞行路径容器 -->
+                <div class="flight-path-container-vertical">
+                    <svg class="flight-path-vertical" viewBox="0 0 1000 3400" preserveAspectRatio="xMidYMin slice">
+                        <!-- 垂直正弦波路径 -->
+                        <!-- M 500 0 (Start Top Center) -->
+                        <!-- Q 900 200, 500 400 (Curve Right then back to Center) -->
+                        <!-- T 500 800 (Reflected Curve Left) -->
+                        <!-- Repeat for 8 sections -->
+                        <path id="flightPathVertical" d="M 500 0 
+                                 Q 800 200, 500 400 
+                                 T 500 800 
+                                 T 500 1200 
+                                 T 500 1600 
+                                 T 500 2000 
+                                 T 500 2400 
+                                 T 500 2800 
+                                 T 500 3200" fill="none" stroke="rgba(0, 51, 102, 0.3)" stroke-width="3"
+                            stroke-dasharray="10,10" />
+
+                        <!-- 动态路径 (用于显示进度) -->
+                        <path id="flightPathProgress" d="M 500 0 
+                                 Q 800 200, 500 400 
+                                 T 500 800 
+                                 T 500 1200 
+                                 T 500 1600 
+                                 T 500 2000 
+                                 T 500 2400 
+                                 T 500 2800 
+                                 T 500 3200" fill="none" stroke="#003366" stroke-width="4"
+                            stroke-dasharray="0, 10000" />
+                    </svg>
+
+                    <!-- 发光纸飞机 -->
+                    <div class="paper-plane-vertical" id="paperPlaneVertical">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#fff" stroke="#003366" stroke-width="2">
+                            <path d="M21 2L3 11l7 2 9-9-2 7 8-8z" />
+                        </svg>
+                        <div class="plane-glow"></div>
+                    </div>
+                </div>
+
+                <div class="travel-spots-vertical">
+
+                    <!-- 板块一：马来亚大学国家公派校际交换生 (New Module 1) -->
+                    <div class="travel-spot-v right" data-index="1" style="top: 200px;">
+                        <div class="spot-content-v">
+                            <h3 class="spot-title text-zh">马来亚大学国家公派校际交换生</h3>
+                            <h3 class="spot-title text-en" style="display: none;">National Government-Sponsored Exchange
+                                Student at University of Malaya</h3>
+
+                            <span class="spot-role text-zh">国家公派校际交换生</span>
+                            <span class="spot-role text-en" style="display: none;">Government-Sponsored Exchange
+                                Student</span>
+
+                            <div class="spot-images-v">
+                                <img src="images/图片36.jpg" alt="吉隆坡" class="spot-image active">
+                                <img src="images/图片43.jpg" alt="马来西亚" class="spot-image">
+                                <img src="images/图片32.jpg" alt="交流" class="spot-image">
+                                <img src="images/图片38.png" alt="风景" class="spot-image">
+                                <img src="images/图片33.jpg" alt="活动" class="spot-image">
+                                <img src="images/图片39.png" alt="见闻" class="spot-image">
+                                <img src="images/图片34.jpg" alt="合影" class="spot-image">
+                                <img src="images/图片40.png" alt="校园" class="spot-image">
+                                <img src="images/图片35.jpg" alt="学习" class="spot-image">
+                                <img src="images/图片37.png" alt="考察" class="spot-image">
+                                <img src="images/图片41.jpg" alt="生活" class="spot-image">
+                                <img src="images/图片42.jpg" alt="文化" class="spot-image">
+                            </div>
+                            <p class="spot-description text-zh">
+                                参与为期一学期的华北电力大学与马来亚大学(QS:58)的国家公派校际交换生项目。深入走访马来西亚（吉隆坡、仙本那）及印度尼西亚（泗水、巴厘岛）等核心经济区，克服热带气候与复杂的语言环境，展现出极强的海外驻派适应能力与抗压能力，能迅速融入东盟文化圈；与来自世界各地的青年建立深厚联系，熟练处理穆斯林文化与多元宗教背景下的沟通禁忌与礼仪，具备在复杂文化冲突中进行有效协调与翻译的潜质。
+                            </p>
+                            <p class="spot-description text-en" style="display: none;">Participated in a one-semester
+                                government-sponsored exchange program between North China Electric Power University and
+                                the University of Malaya (QS:60). Conducted in-depth visits to core economic zones in
+                                Malaysia (Kuala Lumpur, Semporna) and Indonesia (Surabaya, Bali), overcoming tropical
+                                climate and complex linguistic environments. Demonstrated strong adaptability and
+                                resilience in overseas assignments, quickly integrating into the ASEAN cultural sphere.
+                                Established deep connections with youth from around the world, skillfully navigating
+                                communication taboos and etiquette within Muslim culture and diverse religious
+                                backgrounds, showing potential for effective coordination and translation in complex
+                                cultural conflicts.</p>
+                        </div>
+                    </div>
+
+                    <!-- 板块二：博鳌亚洲论坛 (Old Module 1) -->
+                    <div class="travel-spot-v left" data-index="2" style="top: 600px;">
+                        <div class="spot-content-v">
+                            <h3 class="spot-title text-zh">博鳌亚洲论坛全球健康论坛 GHF 第二届大会</h3>
+                            <h3 class="spot-title text-en" style="display: none;">Boao Forum for Asia Global Health
+                                Forum GHF Second Conference</h3>
+
+                            <span class="spot-role text-zh">博览会宣传组核心志愿者</span>
+                            <span class="spot-role text-en" style="display: none;">Core Volunteer of the Expo Publicity
+                                Group</span>
+
+                            <div class="spot-images-v">
+                                <img src="images/图片3.jpg" alt="图片3" class="spot-image active">
+                                <img src="images/图片26.jpg" alt="图片26" class="spot-image">
+                            </div>
+                            <p class="spot-description text-zh">
+                                负责以色列及南苏丹驻华大使的专职接待与媒体采访统筹，在高压外事环境中实现接待流程零失误，现场工作风采被央视《新闻联播》收录，展现了极强的临场应变与高端外事接待能力。</p>
+                            <p class="spot-description text-en" style="display: none;">Responsible for dedicated
+                                reception and media interview coordination for the Israeli and South Sudanese
+                                ambassadors to China, achieving zero errors in reception procedures in high-pressure
+                                diplomatic environments. On-site work was featured in CCTV's "News Broadcast,"
+                                demonstrating exceptional on-the-spot adaptability and high-end diplomatic reception
+                                capabilities.</p>
+                        </div>
+                    </div>
+
+                    <!-- 板块三："一带一路"职业教育国际论坛 (Old Module 2) -->
+                    <div class="travel-spot-v right" data-index="3" style="top: 1000px;">
+                        <div class="spot-content-v">
+                            <h3 class="spot-title text-zh">"一带一路"职业教育国际论坛</h3>
+                            <h3 class="spot-title text-en" style="display: none;">"Belt and Road" International
+                                Vocational Education Forum</h3>
+
+                            <span class="spot-role text-zh">非遗展区英文独家讲解员</span>
+                            <span class="spot-role text-en" style="display: none;">Exclusive English Interpreter for
+                                Intangible Cultural Heritage Exhibition</span>
+
+                            <div class="spot-images-v">
+                                <img src="images/图片24.jpg" alt="图片24" class="spot-image active">
+                                <img src="images/图片25.jpg" alt="图片25" class="spot-image">
+                            </div>
+                            <p class="spot-description text-zh">
+                                担任论坛非遗展区英文讲解员，向多国嘉宾深度推介"京绣"等国家级非遗技艺，精准传递"一带一路"文化内涵，体现了优秀的跨文化传播能力与讲好中国故事的政治素养。</p>
+                            <p class="spot-description text-en" style="display: none;">Served as the forum's English
+                                interpreter for the intangible cultural heritage zone, introducing national-level
+                                intangible heritage such as "Beijing Embroidery" to international guests and conveying
+                                the Belt and Road cultural connotation, demonstrating strong cross-cultural
+                                communication and storytelling skills.</p>
+                        </div>
+                    </div>
+
+                    <!-- 板块四：中国国际公务员能力建设项目 (Old Module 3) -->
+                    <div class="travel-spot-v left" data-index="4" style="top: 1400px;">
+                        <div class="spot-content-v">
+                            <h3 class="spot-title text-zh">第十四期中国国际公务员能力建设项目</h3>
+                            <h3 class="spot-title text-en" style="display: none;">14th China International Civil Servant
+                                Capacity Building Program</h3>
+
+                            <span class="spot-role text-zh">优秀学员（前 10%）</span>
+                            <span class="spot-role text-en" style="display: none;">Outstanding Participant (Top
+                                10%)</span>
+
+                            <div class="spot-images-v">
+                                <img src="images/图片44.png" alt="图片44" class="spot-image active">
+                                <img src="images/图片45.png" alt="图片45" class="spot-image">
+                                <img src="images/图片46.png" alt="图片46" class="spot-image">
+                                <img src="images/图片47.png" alt="图片47" class="spot-image">
+                                <img src="images/图片48.png" alt="图片48" class="spot-image">
+                            </div>
+                            <p class="spot-description text-zh">
+                                从全国高校选拔中脱颖而出参加由中国联合国协会主办的培训项目，系统掌握多边外交规则与国际组织运作机制，并获"优秀学员"表彰，具备广阔的国际视野与涉外规则意识。</p>
+                            <p class="spot-description text-en" style="display: none;">Selected from universities
+                                nationwide to participate in the program hosted by the United Nations Association of
+                                China; systematically mastered multilateral diplomatic rules and international
+                                organization operations, and received "Outstanding Participant" recognition, with broad
+                                international perspective and awareness of foreign-related rules.</p>
+                        </div>
+                    </div>
+
+                    <!-- 板块五：欧洲政党青年政治家联合考察团晚宴 (Old Module 4) -->
+                    <div class="travel-spot-v right" data-index="5" style="top: 1800px;">
+                        <div class="spot-content-v">
+                            <h3 class="spot-title text-zh">欧洲政党青年政治家联合考察团晚宴</h3>
+                            <h3 class="spot-title text-en" style="display: none;">European Political Party Young
+                                Politicians Joint Study Group Dinner</h3>
+
+                            <span class="spot-role text-zh">陪同翻译</span>
+                            <span class="spot-role text-en" style="display: none;">Accompanying Interpreter</span>
+
+                            <div class="spot-images-v">
+                                <img src="images/图片29.jpg" alt="图片29" class="spot-image active">
+                            </div>
+                            <p class="spot-description text-zh">
+                                全程参与由中联部主办的高规格外事晚宴，负责外宾引导及用餐陪同翻译，严格遵循外事礼仪规范，确保了涉外沟通的政治准确性与流程顺畅。</p>
+                            <p class="spot-description text-en" style="display: none;">Participated in the high-level
+                                diplomatic dinner hosted by the International Department of the CPC Central Committee,
+                                responsible for guest guidance and dining interpretation, following diplomatic etiquette
+                                and ensuring political accuracy and smooth communication.</p>
+                        </div>
+                    </div>
+
+                    <!-- 板块六：保定-旧金山中美青少年汉语文化周 (Old Module 5) -->
+                    <div class="travel-spot-v left" data-index="6" style="top: 2200px;">
+                        <div class="spot-content-v">
+                            <h3 class="spot-title text-zh">保定-旧金山中美青少年汉语文化周</h3>
+                            <h3 class="spot-title text-en" style="display: none;">Baoding-San Francisco China-US Youth
+                                Chinese Culture Week</h3>
+
+                            <span class="spot-role text-zh">双语翻译</span>
+                            <span class="spot-role text-en" style="display: none;">Bilingual Translator</span>
+
+                            <div class="spot-images-v">
+                                <img src="images/图片27.jpg" alt="图片27" class="spot-image active">
+                                <img src="images/图片49.jpg" alt="图片49" class="spot-image">
+                                <img src="images/图片50.jpg" alt="图片50" class="spot-image">
+                                <img src="images/图片51.jpg" alt="图片51" class="spot-image">
+                            </div>
+                            <p class="spot-description text-zh">
+                                协助媒体完成对美籍青少年的双语采访，并配合非遗老师进行全英文现场教学，有效搭建中美青年文化交流桥梁，展现了极具亲和力的双语沟通素养。</p>
+                            <p class="spot-description text-en" style="display: none;">Assisted media with bilingual
+                                interviews of American youth and supported intangible heritage teachers in full-English
+                                on-site teaching, building bridges for China-US youth cultural exchange and
+                                demonstrating strong bilingual communication skills.</p>
+                        </div>
+                    </div>
+
+                    <!-- 板块七：阜平安德纺织产业推介会 (Old Module 6) -->
+                    <div class="travel-spot-v right" data-index="7" style="top: 2600px;">
+                        <div class="spot-content-v">
+                            <h3 class="spot-title text-zh">河北省保定市阜平县安德纺织"万人共享工厂"推进会暨产业推介会</h3>
+                            <h3 class="spot-title text-en" style="display: none;">Fuping County Ande Textile "Ten
+                                Thousand People Shared Factory" Promotion and Industry Conference</h3>
+
+                            <span class="spot-role text-zh">交替传译译员</span>
+                            <span class="spot-role text-en" style="display: none;">Consecutive Interpreter</span>
+
+                            <div class="spot-images-v">
+                                <img src="images/图片31.jpg" alt="图片31" class="spot-image active">
+                                <img src="images/图片54.jpg" alt="图片54" class="spot-image">
+                                <img src="images/图片55.jpg" alt="图片55" class="spot-image">
+                                <img src="images/图片56.jpg" alt="图片56" class="spot-image">
+                                <img src="images/图片57.jpg" alt="图片57" class="spot-image">
+                            </div>
+                            <p class="spot-description text-zh">
+                                在阜平产业推介大会现场为阜平县县长许涛做现场交替传译，在县长带领美国安沃尔公司CEO与高管参观阜平特色农产品展台与纺织生产车间时担任陪同翻译。</p>
+                            <p class="spot-description text-en" style="display: none;">Provided on-site consecutive
+                                interpretation for Fuping County Mayor Xu Tao at the industry promotion conference, and
+                                served as accompanying interpreter when the mayor led the American company CEO and
+                                executives to visit agricultural and textile sites.</p>
+                        </div>
+                    </div>
+
+                    <!-- 板块八：发展中国家电力官员研修班学员文化交流会 (Old Module 7) -->
+                    <div class="travel-spot-v left" data-index="8" style="top: 3000px;">
+                        <div class="spot-content-v">
+                            <h3 class="spot-title text-zh">发展中国家电力官员研修班学员文化交流会</h3>
+                            <h3 class="spot-title text-en" style="display: none;">Cultural Exchange for Training Program
+                                for Power Officials from Developing Countries</h3>
+
+                            <span class="spot-role text-zh">英文讲解员</span>
+                            <span class="spot-role text-en" style="display: none;">English Interpreter</span>
+
+                            <div class="spot-images-v">
+                                <img src="images/图片28.jpg" alt="图片28" class="spot-image active">
+                                <img src="images/图片52.jpg" alt="图片52" class="spot-image">
+                                <img src="images/图片53.jpg" alt="图片53" class="spot-image">
+                            </div>
+                            <p class="spot-description text-zh">
+                                作为英文讲解员向发展中国家电力官员研修班学员以及华电英语系师生作"中国结"的相关讲解，通过实物和现场才艺展示，让外国友人亲自动手学习编织中国结，深刻体会中华文化的智慧和艺术之美。
+                            </p>
+                            <p class="spot-description text-en" style="display: none;">As English interpreter, gave
+                                presentations on "Chinese Knots" to participants of the training program and to faculty
+                                and students; through objects and live demonstrations, enabled foreign guests to learn
+                                weaving and experience the wisdom and beauty of Chinese culture.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 照片画廊 / 团队引领 -->
+        <div class="photo-gallery-section" id="section-gallery">
+            <div class="team-leadership-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                        <h2 class="section-title text-zh">团队引领</h2>
+                        <h2 class="section-title text-en" style="display: none;">Team Leadership</h2>
+                        <p class="gallery-subtitle text-zh">学生事务</p>
+                        <p class="gallery-subtitle text-en" style="display: none;">Student Affairs</p>
+                    </div>
+                    <button class="lang-toggle-professional" id="teamLangToggle">
+                        <span class="lang-option active" data-lang="zh">中文</span>
+                        <span class="lang-option" data-lang="en">EN</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 7张角色卡片：鼠标悬浮展开详情 -->
+            <div class="role-cards-grid">
+
+                <!-- 卡片 1: 英语系研究生会主席 -->
+                <div class="role-card" data-role="1">
+                    <div class="role-card-front">
+                        <div class="role-card-icon">🎓</div>
+                        <div class="role-card-tag text-zh">校内职务</div>
+                        <div class="role-card-tag text-en" style="display:none;">Campus Role</div>
+                        <h3 class="role-card-title text-zh">英语系研究生会主席</h3>
+                        <h3 class="role-card-title text-en" style="display:none;">Graduate Student Union President</h3>
+                        <div class="role-card-meta">
+                            <span class="role-card-time">2024-10 ~ 2025-10</span>
+                            <span class="role-card-loc text-zh">华北电力大学（保定）</span>
+                            <span class="role-card-loc text-en" style="display:none;">NCEPU (Baoding)</span>
+                        </div>
+                        <div class="role-card-hint text-zh">悬浮查看详情 ↓</div>
+                        <div class="role-card-hint text-en" style="display:none;">Hover for details ↓</div>
+                    </div>
+                    <div class="role-card-back">
+                        <div class="role-back-title text-zh">职责和业绩</div>
+                        <div class="role-back-title text-en" style="display:none;">Responsibilities</div>
+                        <ul class="role-back-list">
+                            <li class="text-zh">统筹管理系部官方微信公众号及视频号，负责"研究生学术论坛"、"党团建设"等重大活动宣发，落实"三审三校"机制，确保零舆情风险。</li>
+                            <li class="text-en" style="display:none;">Coordinated dept. WeChat & video accounts; managed publicity for major events; implemented strict review mechanism ensuring zero PR risk.</li>
+                            <li class="text-zh">带领 10+ 人宣传团队，负责学术会议摄影采编与新闻通稿，将活动报道时效性提升了 50%。</li>
+                            <li class="text-en" style="display:none;">Led 10+ member publicity team for academic conferences; improved reporting timeliness by 50%.</li>
+                            <li class="text-zh">累计撰写并审核 50+ 篇推文，累计阅读量达 10,000+，赢得老师好评。</li>
+                            <li class="text-en" style="display:none;">Wrote & reviewed 50+ articles with 10,000+ total reads; highly praised by faculty.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 卡片 2: 党史讲解员 -->
+                <div class="role-card" data-role="2">
+                    <div class="role-card-front">
+                        <div class="role-card-icon">🏛️</div>
+                        <div class="role-card-tag text-zh">校内职务</div>
+                        <div class="role-card-tag text-en" style="display:none;">Campus Role</div>
+                        <h3 class="role-card-title text-zh">反腐倡廉警示教育基地党史讲解员</h3>
+                        <h3 class="role-card-title text-en" style="display:none;">Anti-Corruption Education Base Docent</h3>
+                        <div class="role-card-meta">
+                            <span class="role-card-time">2024-06 ~ 2025-10</span>
+                            <span class="role-card-loc text-zh">华北电力大学（保定）</span>
+                            <span class="role-card-loc text-en" style="display:none;">NCEPU (Baoding)</span>
+                        </div>
+                        <div class="role-card-hint text-zh">悬浮查看详情 ↓</div>
+                        <div class="role-card-hint text-en" style="display:none;">Hover for details ↓</div>
+                    </div>
+                    <div class="role-card-back">
+                        <div class="role-back-title text-zh">职责和业绩</div>
+                        <div class="role-back-title text-en" style="display:none;">Responsibilities</div>
+                        <ul class="role-back-list">
+                            <li class="text-zh">由华北电力大学纪律检查委员会办公室聘请，作为反腐倡廉警示教育基地讲解员。</li>
+                            <li class="text-en" style="display:none;">Appointed by NCEPU's Discipline Inspection Committee as an official docent at the Anti-Corruption Education Base.</li>
+                            <li class="text-zh">已为超过 12 个院系和组织的领导及师生党员进行廉政讲解，包含中央八项规定新增版块讲解。</li>
+                            <li class="text-en" style="display:none;">Delivered integrity education lectures to leaders and Party members across 12+ departments, including new provisions of the Central Eight-Point Regulation.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 卡片 3: 研究生助管 -->
+                <div class="role-card" data-role="3">
+                    <div class="role-card-front">
+                        <div class="role-card-icon">💆</div>
+                        <div class="role-card-tag text-zh">校内职务</div>
+                        <div class="role-card-tag text-en" style="display:none;">Campus Role</div>
+                        <h3 class="role-card-title text-zh">大学生心理健康教育中心研究生助管</h3>
+                        <h3 class="role-card-title text-en" style="display:none;">Psychological Health Center Graduate Assistant</h3>
+                        <div class="role-card-meta">
+                            <span class="role-card-time">2023-09 ~ 2024-05</span>
+                            <span class="role-card-loc text-zh">华北电力大学（保定）</span>
+                            <span class="role-card-loc text-en" style="display:none;">NCEPU (Baoding)</span>
+                        </div>
+                        <div class="role-card-hint text-zh">悬浮查看详情 ↓</div>
+                        <div class="role-card-hint text-en" style="display:none;">Hover for details ↓</div>
+                    </div>
+                    <div class="role-card-back">
+                        <div class="role-back-title text-zh">职责和业绩</div>
+                        <div class="role-back-title text-en" style="display:none;">Responsibilities</div>
+                        <ul class="role-back-list">
+                            <li class="text-zh">协助处理日常行政事务，负责学生心理档案的保密管理与分类归档，展现极强的保密意识与职业操守。</li>
+                            <li class="text-en" style="display:none;">Assisted with admin tasks; managed confidential student psychological records with strong professionalism.</li>
+                            <li class="text-zh">协助筹备全校心理健康月系列活动，负责物资统筹与现场秩序维护，确保活动流程标准化。</li>
+                            <li class="text-en" style="display:none;">Helped organize campus Mental Health Month events; coordinated materials and on-site logistics.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 卡片 4: 广播台主播 -->
+                <div class="role-card" data-role="4">
+                    <div class="role-card-front">
+                        <div class="role-card-icon">🎙️</div>
+                        <div class="role-card-tag text-zh">校内职务</div>
+                        <div class="role-card-tag text-en" style="display:none;">Campus Role</div>
+                        <h3 class="role-card-title text-zh">一校广播台双语部主播</h3>
+                        <h3 class="role-card-title text-en" style="display:none;">Campus Radio Bilingual Host</h3>
+                        <div class="role-card-meta">
+                            <span class="role-card-time">2023-09 ~ 2024-09</span>
+                            <span class="role-card-loc text-zh">华北电力大学（保定）</span>
+                            <span class="role-card-loc text-en" style="display:none;">NCEPU (Baoding)</span>
+                        </div>
+                        <div class="role-card-hint text-zh">悬浮查看详情 ↓</div>
+                        <div class="role-card-hint text-en" style="display:none;">Hover for details ↓</div>
+                    </div>
+                    <div class="role-card-back">
+                        <div class="role-back-title text-zh">职责和业绩</div>
+                        <div class="role-back-title text-en" style="display:none;">Responsibilities</div>
+                        <ul class="role-back-list">
+                            <li class="text-zh">负责撰写双语稿件，以及每周五"灵动双语"栏目的双语播报和互动。</li>
+                            <li class="text-en" style="display:none;">Wrote bilingual scripts and hosted the weekly "Bilingual Highlights" programme every Friday.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 卡片 5: 记者团采编部部长 -->
+                <div class="role-card" data-role="5">
+                    <div class="role-card-front">
+                        <div class="role-card-icon">📰</div>
+                        <div class="role-card-tag text-zh">社团负责人</div>
+                        <div class="role-card-tag text-en" style="display:none;">Club Leader</div>
+                        <h3 class="role-card-title text-zh">大学生融媒体中心记者团采编部部长</h3>
+                        <h3 class="role-card-title text-en" style="display:none;">Director, Journalism Editorial Dept.</h3>
+                        <div class="role-card-meta">
+                            <span class="role-card-time">2020-10 ~ 2022-03</span>
+                            <span class="role-card-loc text-zh">山东科技大学（青岛）</span>
+                            <span class="role-card-loc text-en" style="display:none;">SDUST (Qingdao)</span>
+                        </div>
+                        <div class="role-card-hint text-zh">悬浮查看详情 ↓</div>
+                        <div class="role-card-hint text-en" style="display:none;">Hover for details ↓</div>
+                    </div>
+                    <div class="role-card-back">
+                        <div class="role-back-title text-zh">职责和业绩</div>
+                        <div class="role-back-title text-en" style="display:none;">Responsibilities</div>
+                        <ul class="role-back-list">
+                            <li class="text-zh">在"2019全国大学生酷跑迷你马拉松公益挑战"担任新闻稿撰写员，新闻稿被"大众网·海报新闻"收录。</li>
+                            <li class="text-en" style="display:none;">Wrote press releases for the 2019 National University Mini-Marathon; published by DaZhong News.</li>
+                            <li class="text-zh">深度参与"十年树木，百年树人"省部级优秀教师采访活动，新闻内容被山东科技大学官网收录。</li>
+                            <li class="text-en" style="display:none;">Covered provincial-level outstanding teacher interviews; content published on SDUST official website.</li>
+                            <li class="text-zh">参与2017级校十大优秀人物、2020级新生百团纳新等多项采访，多次登上校级刊物《山东科大报》。</li>
+                            <li class="text-en" style="display:none;">Covered top-10 student awards, freshman fairs; articles featured in SDUST campus newspaper.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 卡片 6: 新闻中心副部长 -->
+                <div class="role-card" data-role="6">
+                    <div class="role-card-front">
+                        <div class="role-card-icon">📡</div>
+                        <div class="role-card-tag text-zh">社团负责人</div>
+                        <div class="role-card-tag text-en" style="display:none;">Club Leader</div>
+                        <h3 class="role-card-title text-zh">外国语学院新闻中心副部长</h3>
+                        <h3 class="role-card-title text-en" style="display:none;">Deputy Director, College News Center</h3>
+                        <div class="role-card-meta">
+                            <span class="role-card-time">2020-10 ~ 2021-10</span>
+                            <span class="role-card-loc text-zh">山东科技大学（青岛）</span>
+                            <span class="role-card-loc text-en" style="display:none;">SDUST (Qingdao)</span>
+                        </div>
+                        <div class="role-card-hint text-zh">悬浮查看详情 ↓</div>
+                        <div class="role-card-hint text-en" style="display:none;">Hover for details ↓</div>
+                    </div>
+                    <div class="role-card-back">
+                        <div class="role-back-title text-zh">职责和业绩</div>
+                        <div class="role-back-title text-en" style="display:none;">Responsibilities</div>
+                        <ul class="role-back-list">
+                            <li class="text-zh">参与外院日常新闻活动的采写及编辑审核工作。</li>
+                            <li class="text-en" style="display:none;">Covered and edited daily news events for the School of Foreign Languages.</li>
+                            <li class="text-zh">负责采写的"第二十四届外语文化艺术节开幕式"新闻稿被学院官网收录；"科大春季校园双选会"由"嵙外语·好声音"公众号发布。</li>
+                            <li class="text-en" style="display:none;">Press releases for the 24th Foreign Language Arts Festival published on college website; job fair report published on official WeChat.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 卡片 7: 青年志愿者协会干事 -->
+                <div class="role-card" data-role="7">
+                    <div class="role-card-front">
+                        <div class="role-card-icon">🤝</div>
+                        <div class="role-card-tag text-zh">志愿服务</div>
+                        <div class="role-card-tag text-en" style="display:none;">Volunteer</div>
+                        <h3 class="role-card-title text-zh">外国语学院青年志愿者协会干事</h3>
+                        <h3 class="role-card-title text-en" style="display:none;">Officer, Youth Volunteer Association</h3>
+                        <div class="role-card-meta">
+                            <span class="role-card-time">2019-09 ~ 2020-10</span>
+                            <span class="role-card-loc text-zh">山东科技大学（青岛）</span>
+                            <span class="role-card-loc text-en" style="display:none;">SDUST (Qingdao)</span>
+                        </div>
+                        <div class="role-card-hint text-zh">悬浮查看详情 ↓</div>
+                        <div class="role-card-hint text-en" style="display:none;">Hover for details ↓</div>
+                    </div>
+                    <div class="role-card-back">
+                        <div class="role-back-title text-zh">职责和业绩</div>
+                        <div class="role-back-title text-en" style="display:none;">Responsibilities</div>
+                        <ul class="role-back-list">
+                            <li class="text-zh">负责志愿者招募信息发布、报名表收集与筛选，以及活动相关文件的归档。</li>
+                            <li class="text-en" style="display:none;">Managed volunteer recruitment, application collection, and document archiving.</li>
+                            <li class="text-zh">针对志愿服务项目进行前期调研，协助撰写活动策划方案。</li>
+                            <li class="text-en" style="display:none;">Conducted pre-event research and helped draft activity planning proposals.</li>
+                            <li class="text-zh">担任现场联络员，负责岗位分配；收集活动后的志愿者和服务对象反馈。</li>
+                            <li class="text-en" style="display:none;">Served as on-site coordinator; managed volunteer assignments and collected post-event feedback.</li>
+                            <li class="text-zh">协助撰写青志协公众号推送文案，整理历届优秀志愿服务案例。</li>
+                            <li class="text-en" style="display:none;">Wrote WeChat articles and compiled outstanding volunteer service case archives.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div><!-- /.role-cards-grid -->
+        </div><!-- /.photo-gallery-section -->
+
+        <!-- 统计数据 -->
+        <div class="stats-section">
+            <h2 class="section-title">// 学生时代数据统计</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div class="stat-number" data-target="16">0</div>
+                    <div class="stat-label">Years of Learning</div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-trophy"></i>
+                    <div class="stat-number" data-target="15">0</div>
+                    <div class="stat-label">Awards &amp; Achievements</div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-number" data-target="500">0</div>
+                    <div class="stat-label">Friends Made</div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-smile"></i>
+                    <div class="stat-number" data-target="999">0</div>
+                    <div class="stat-label">Unforgettable Moments</div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="student-footer">
+        <div class="container">
+            <p>$ echo "These memories shaped who I am today"</p>
+            <p class="footer-note">// End of student_days.log | Press any key to continue...</p>
+        </div>
+    </footer>
+
+    <!-- 悬浮回到顶部按钮 -->
+    <div class="floating-controls">
+        <button id="backToTop" class="control-btn" aria-label="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+
+    <!-- 时间线进度条 -->
+    <div class="timeline-progress" id="timelineProgress"></div>
+
+    <!-- 图片放大模态框 -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal(event)">
+        <span class="image-modal-close" onclick="closeImageModal(event)">&times;</span>
+        <div class="image-modal-content" onclick="event.stopPropagation()">
+            <img id="modalImage" src="" alt="">
+        </div>
+    </div>
+
+    <!-- Scripts - 先加载公共脚本，再加载页面专用脚本 -->
+    <script src="js/common.js"></script>
+    <script src="js/student-life.js"></script>
+    <script>
+        // 图片放大功能
+        function openImageModal(imageSrc, imageAlt) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageSrc;
+            modalImage.alt = imageAlt;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+
+        function closeImageModal(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // 恢复滚动
+        }
+
+        // 按ESC键关闭模态框
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        // 图片滑动切换功能
+        let currentSlide = 1;
+        let autoSlideInterval = null;
+
+        function slideToImage(slideNumber) {
+            const slides = document.querySelectorAll('.image-slide');
+            const currentSlideEl = document.querySelector(`.image-slide.slide-${currentSlide}`);
+            const targetSlideEl = document.querySelector(`.image-slide.slide-${slideNumber}`);
+
+            if (!targetSlideEl) return;
+
+            // 移除所有活动状态
+            slides.forEach(slide => {
+                slide.classList.remove('active', 'prev');
+            });
+
+            // 设置当前幻灯片为prev（向左滑出）
+            if (currentSlideEl && currentSlideEl !== targetSlideEl) {
+                currentSlideEl.classList.add('prev');
+            }
+
+            // 显示目标幻灯片（从右侧滑入）
+            targetSlideEl.classList.add('active');
+            currentSlide = slideNumber;
+        }
+
+        // 自动滑动函数
+        function startAutoSlide() {
+            // 清除之前的定时器
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+            }
+
+            // 设置自动滑动，每4秒切换一次
+            autoSlideInterval = setInterval(() => {
+                let nextSlide = currentSlide + 1;
+                if (nextSlide > 3) {
+                    nextSlide = 1; // 循环回到第一张
+                }
+                slideToImage(nextSlide);
+            }, 4000); // 4秒间隔
+        }
+
+        // 初始化：确保第一张图片显示并开始自动滑动
+        document.addEventListener('DOMContentLoaded', function () {
+            const firstSlide = document.querySelector('.image-slide.slide-1');
+            if (firstSlide) {
+                firstSlide.classList.add('active');
+                currentSlide = 1;
+                // 延迟1秒后开始自动滑动，让用户先看到第一张图片
+                setTimeout(() => {
+                    startAutoSlide();
+                }, 1000);
+            }
+
+            // 初始化专业足迹语言切换
+            initProfessionalLanguageToggle();
+        });
+
+        // 专业足迹语言切换功能
+        function initProfessionalLanguageToggle() {
+            const toggle = document.getElementById('professionalLangToggle');
+            if (!toggle) return;
+
+            const options = toggle.querySelectorAll('.lang-option');
+            let currentLang = 'zh'; // 默认显示中文
+
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 切换语言
+                currentLang = currentLang === 'zh' ? 'en' : 'zh';
+
+                // 更新按钮状态
+                options.forEach(option => {
+                    const lang = option.getAttribute('data-lang');
+                    if (lang === currentLang) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+
+                // 切换标题
+                const zhTitle = document.querySelector('#section-high .university-title.text-zh');
+                const enTitle = document.querySelector('#section-high .university-title.text-en');
+                const zhSubtitle = document.querySelector('#section-high .university-subtitle.text-zh');
+                const enSubtitle = document.querySelector('#section-high .university-subtitle.text-en');
+
+                if (currentLang === 'zh') {
+                    if (zhTitle) {
+                        zhTitle.style.display = 'block';
+                        zhTitle.classList.remove('text-fade-out');
+                        zhTitle.classList.add('text-fade-in');
+                    }
+                    if (enTitle) {
+                        enTitle.style.display = 'none';
+                        enTitle.classList.add('text-fade-out');
+                        enTitle.classList.remove('text-fade-in');
+                    }
+                    if (zhSubtitle) {
+                        zhSubtitle.style.display = 'block';
+                        zhSubtitle.classList.remove('text-fade-out');
+                        zhSubtitle.classList.add('text-fade-in');
+                    }
+                    if (enSubtitle) {
+                        enSubtitle.style.display = 'none';
+                        enSubtitle.classList.add('text-fade-out');
+                        enSubtitle.classList.remove('text-fade-in');
+                    }
+                } else {
+                    if (zhTitle) {
+                        zhTitle.style.display = 'none';
+                        zhTitle.classList.add('text-fade-out');
+                        zhTitle.classList.remove('text-fade-in');
+                    }
+                    if (enTitle) {
+                        enTitle.style.display = 'block';
+                        enTitle.classList.remove('text-fade-out');
+                        enTitle.classList.add('text-fade-in');
+                    }
+                    if (zhSubtitle) {
+                        zhSubtitle.style.display = 'none';
+                        zhSubtitle.classList.add('text-fade-out');
+                        zhSubtitle.classList.remove('text-fade-in');
+                    }
+                    if (enSubtitle) {
+                        enSubtitle.style.display = 'block';
+                        enSubtitle.classList.remove('text-fade-out');
+                        enSubtitle.classList.add('text-fade-in');
+                    }
+                }
+
+                // 切换文章内容
+                const professionalSection = document.querySelector('#section-high');
+                if (!professionalSection) return;
+
+                const zhTexts = professionalSection.querySelectorAll('.text-zh');
+                const enTexts = professionalSection.querySelectorAll('.text-en');
+
+                if (currentLang === 'zh') {
+                    zhTexts.forEach(el => {
+                        el.style.display = 'block';
+                        el.style.opacity = '1';
+                        el.classList.remove('text-fade-out');
+                        el.classList.add('text-fade-in');
+                    });
+                    enTexts.forEach(el => {
+                        el.style.display = 'none';
+                        el.style.opacity = '0';
+                        el.classList.add('text-fade-out');
+                        el.classList.remove('text-fade-in');
+                    });
+                } else {
+                    zhTexts.forEach(el => {
+                        el.style.display = 'none';
+                        el.style.opacity = '0';
+                        el.classList.add('text-fade-out');
+                        el.classList.remove('text-fade-in');
+                    });
+                    enTexts.forEach(el => {
+                        el.style.display = 'block';
+                        el.style.opacity = '1';
+                        el.classList.remove('text-fade-out');
+                        el.classList.add('text-fade-in');
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

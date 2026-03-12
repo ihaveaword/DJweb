@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 关键：内联样式必须在所有外部资源之前，防止闪烁 -->
+    <style>
+        /* 浅色主题关键样式 - 在外部CSS加载前生效 */
+        html[data-theme="light"],
+        html[data-theme="light"] body {
+            background-color: #F9F9F9 !important;
+            color: #333333 !important;
+        }
+
+        /* 深色主题关键样式 */
+        html:not([data-theme="light"]),
+        html:not([data-theme="light"]) body {
+            background-color: #000000;
+            color: #00ff00;
+        }
+    </style>
+    <!-- 主题初始化：在页面渲染前设置 -->
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <title>ZHY - Computer Vision Researcher | AI Developer | NCEPU</title>
+    <meta name="description"
+        content="Graduate student at North China Electric Power University, specializing in Computer Vision, VLM, Object Detection. HCIP-AI Ascend Certified Developer.">
+    <meta name="keywords" content="Computer Vision, AI, Object Detection, VLM, VLP, Deep Learning, NCEPU, Ascend">
+    <meta name="author" content="ZHY">
+
+    <!-- Favicon - 多尺寸支持 -->
+    <link rel="apple-touch-icon" sizes="57x57" href="favicon.ico/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicon.ico/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favicon.ico/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favicon.ico/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favicon.ico/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favicon.ico/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favicon.ico/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favicon.ico/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.ico/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.ico/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon.ico/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.ico/favicon-16x16.png">
+    <link rel="manifest" href="favicon.ico/manifest.json">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="favicon.ico/ms-icon-144x144.png">
+    <meta name="theme-color" content="#00ff00">
+
+    <!-- Fonts -->
+    <!-- Use system fonts for best performance -->
+    rel="stylesheet">
+
+    <!-- Icons -->
+    <!-- Font Awesome - 国内 CDN 优先，失败则使用本地备份 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        onerror="this.onerror=null;this.href='vendor/fontawesome/css/all.min.css'">
+
+    <!-- Highlight.js CSS - 国内 CDN 优先，失败则使用本地备份 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+        onerror="this.onerror=null;this.href='vendor/js/atom-one-dark.min.css'">
+
+    <!-- Custom CSS - 先加载公共样式，再加载页面专用样式 -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-logo">
+                <a href="#home">root@ihave:~#</a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="active">首页 | Home</a></li>
+                <li><a href="student-life.html">学生时代 | Student Life</a></li>
+                <li><a href="certificates.html">证书荣誉 | Certificates</a></li>
+                <li><a href="#portfolio">作品集 | Portfolio</a></li>
+                <li><a href="#contact">联系 | Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 悬浮控制台 (Floating Control Center) -->
+    <div class="floating-controls">
+        <button id="menuTrigger" class="control-btn" aria-label="Menu">
+            <div class="icon-state-normal"><i class="fas fa-bars"></i></div>
+            <div class="icon-state-hover"><i class="fas fa-arrow-right"></i></div>
+        </button>
+        <button id="backToTop" class="control-btn hidden" aria-label="Top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+
+    <!-- 侧边栏容器 (Sidebar) -->
+    <aside id="sidebar" class="sidebar sidebar-hidden">
+        <div class="sidebar-header">
+            <div class="sidebar-title">NAVIGATION</div>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="sidebar-menu">
+                <li><a href="#home" class="sidebar-link"><i class="fas fa-home"></i> <span>./home</span></a></li>
+                <li><a href="#about" class="sidebar-link"><i class="fas fa-user"></i> <span>./about</span></a></li>
+                <li><a href="#student-life" class="sidebar-link"><i class="fas fa-graduation-cap"></i>
+                        <span>./memories</span></a></li>
+                <li><a href="#portfolio" class="sidebar-link"><i class="fas fa-code"></i> <span>./work</span></a></li>
+                <li><a href="#ai-chat" class="sidebar-link"><i class="fas fa-robot"></i> <span>./ai</span></a></li>
+                <li><a href="#contact" class="sidebar-link"><i class="fas fa-envelope"></i> <span>./contact</span></a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-theme-toggle" id="sidebarThemeToggle">
+                <i class="fas fa-adjust"></i> <span>Toggle Theme</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 首屏区域 -->
+    <section id="home" class="hero">
+        <!-- Matrix代码雨背景 -->
+        <canvas id="matrixCanvas" class="matrix-bg"></canvas>
+        
+        <!-- 右上角背景图片 -->
+        <div class="top-right-image">
+            <img src="images/图片1.jpg" alt="图片1">
+        </div>
+
+        <div class="hero-container">
+            <div class="hero-image">
+                <img src="images/zhengjianzhao.jpg" alt="个人照片" class="main-photo">
+            </div>
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="greeting">$ whoami</span>
+                    <span class="name">董晶</span>
+                </h1>
+                <p class="hero-subtitle">Computer Vision Researcher | AI Developer | HCIP Certified</p>
+                <div class="hero-cta">
+                    <a href="certificates.html" class="btn btn-primary">Certificates</a>
+                    <a href="#ai-chat" class="btn btn-secondary">AI Chat</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 静态精选集区域 (Static Gallery) -->
+    <section class="static-gallery-section">
+        <div class="container">
+            <div class="gallery-grid">
+                <!-- 教育背景 -->
+                <div class="gallery-card">
+                    <div class="gallery-image-wrapper">
+                        <img src="images/图片2.jpg" alt="Education Background">
+                        <div class="gallery-overlay">
+                            <span>EDUCATION</span>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>华北电力大学 英语语言文学硕士</h3>
+                        <p>North China Electric Power University<br>Master of Arts in English Language and Literature</p>
+                    </div>
+                </div>
+
+                <!-- 专业背景 -->
+                <div class="gallery-card">
+                    <div class="gallery-image-wrapper">
+                        <img src="images/图片4.jpeg" alt="Professional Background">
+                        <div class="gallery-overlay">
+                            <span>BACKGROUND</span>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>英语 + 计算机双学位复合背景</h3>
+                        <p>Dual Degree in English & Computer Science<br>Interdisciplinary Background</p>
+                    </div>
+                </div>
+
+                <!-- 专业领域 -->
+                <div class="gallery-card">
+                    <div class="gallery-image-wrapper">
+                        <img src="images/图片3.jpg" alt="Professional Fields">
+                        <div class="gallery-overlay">
+                            <span>EXPERTISE</span>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <h3>高端外事与政策研究</h3>
+                        <p>High-End Foreign Affairs & Policy Research</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 个人简介区域 -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">cat ./about.txt</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <h3 class="self-evaluation text-zh">自我评价</h3>
+                    <h3 class="self-evaluation text-en">Self-Evaluation</h3>
+                </div>
+                <div class="about-text">
+                    <div class="about-header">
+                        <h3>$ cat profile.md</h3>
+                        <button class="lang-toggle" id="langToggle">
+                            <span class="lang-option active" data-lang="zh">中文</span>
+                            <span class="lang-divider">|</span>
+                            <span class="lang-option" data-lang="en">EN</span>
+                        </button>
+                    </div>
+
+                    <p class="text-zh">
+                        【"英语+计算机"复合背景】 华北电力大学（211）英语硕士 + 计算机科学与技术双学位。兼具扎实的语言功底与理工科逻辑思维，熟练掌握 Python, Microsoft Office, WPS 高级应用及新媒体运营，能快速适应数字化办公与海外项目的信息化管理需求。
+                    </p>
+                    <p class="text-en">【"English + Computer Science" Interdisciplinary Background】 Master's degree in English from North China Electric Power University (211 Project) + Dual degree in Computer Science and Technology. Combining solid language skills with STEM logical thinking, proficient in Python, Microsoft Office, WPS advanced applications and new media operations, capable of quickly adapting to digital office environments and information management needs of overseas projects.</p>
+
+                    <p class="text-zh">
+                        【政策研究与公文笔杆】 具备较强的宏观视野与公文撰写能力，曾参与"区域国别政策研究：美国大选政策风向分析"及"宏观经济形势分析：城市数字化转型战略对标"项目，撰写多篇内参文章并发表。熟悉党政机关公文规范，擅长区域国别政策调研，能为企业出海战略提供高质量的信息情报支持。
+                    </p>
+                    <p class="text-en">【Policy Research & Document Writing】 Strong macro perspective and document writing capabilities. Participated in projects including "Regional Country Policy Research: Analysis of U.S. Election Policy Trends" and "Macroeconomic Analysis: Strategic Benchmarking of Urban Digital Transformation," authored and published multiple internal reference articles. Familiar with party and government document standards, skilled in regional country policy research, capable of providing high-quality intelligence support for corporate overseas expansion strategies.</p>
+
+                    <p class="text-zh">
+                        【高端外事与抗压实战】 拥有博鳌亚洲论坛、"一带一路"论坛等国家级外事活动的一线服务经验。熟悉涉外礼仪与跨文化沟通禁忌，具备较强的政治敏锐度与临场应变能力，能适应高强度的海外驻派与跨国差旅工作。
+                    </p>
+                    <p class="text-en">【High-End Foreign Affairs & Resilience】 Frontline service experience in national-level foreign affairs events including Boao Forum for Asia and "Belt and Road" Forum. Familiar with diplomatic etiquette and cross-cultural communication taboos, possessing strong political acumen and on-the-spot adaptability, capable of handling high-intensity overseas assignments and international business travel.</p>
+
+                    <p class="text-zh">
+                        【闭环思维与执行力】 具备"凡事有交代，件件有着落"的闭环工作思维。学习迁移能力强，能短时间内掌握陌生领域业务，性格开朗稳重，具有良好的团队协作精神与大局观。
+                    </p>
+                    <p class="text-en">【Closed-Loop Thinking & Execution】 Possessing a closed-loop work mindset of "everything has follow-up, every task has closure." Strong learning transfer ability, capable of quickly mastering unfamiliar business domains. Outgoing yet steady personality with excellent teamwork spirit and big-picture perspective.</p>
+
+                    <!-- 技能分类展示 -->
+                    <!-- 技能矩阵 (Tag Matrix) -->
+                    <div class="skills-matrix">
+                        <!-- 英语能力 -->
+                        <div class="matrix-category">
+                            <h4 class="category-title text-zh">
+                                <i class="fas fa-language"></i> 英语能力
+                            </h4>
+                            <h4 class="category-title text-en">
+                                <i class="fas fa-language"></i> English Proficiency
+                            </h4>
+                            <div class="matrix-tags">
+                                <span class="skill-tag primary text-zh">英语专业八级 (笔试及口语)</span>
+                                <span class="skill-tag primary text-en">TEM-8 (Written & Oral)</span>
+                                <span class="skill-tag primary text-zh">英语专业四级 (笔试及口语)</span>
+                                <span class="skill-tag primary text-en">TEM-4 (Written & Oral)</span>
+                                <span class="skill-tag primary text-zh">高级中学英语教师资格证</span>
+                                <span class="skill-tag primary text-en">Senior High School English Teaching Certificate</span>
+                            </div>
+                        </div>
+
+                        <!-- 法语能力 -->
+                        <div class="matrix-category">
+                            <h4 class="category-title text-zh">
+                                <i class="fas fa-language"></i> 法语能力
+                            </h4>
+                            <h4 class="category-title text-en">
+                                <i class="fas fa-language"></i> French Proficiency
+                            </h4>
+                            <div class="matrix-tags">
+                                <span class="skill-tag primary text-zh">法语公共四级</span>
+                                <span class="skill-tag primary text-en">TFU-4</span>
+                                <span class="skill-tag primary text-zh">考研成绩 79/100</span>
+                                <span class="skill-tag primary text-en">Graduate Entrance Exam: 79/100</span>
+                                <span class="skill-tag primary text-zh">第十六届外语文化节之多语种短视频大赛一等奖</span>
+                                <span class="skill-tag primary text-en">First Prize, 16th Foreign Language Culture Festival Multilingual Short Video Competition</span>
+                            </div>
+                        </div>
+
+                        <!-- 计算机技能 -->
+                        <div class="matrix-category">
+                            <h4 class="category-title text-zh">
+                                <i class="fas fa-laptop-code"></i> 计算机技能
+                            </h4>
+                            <h4 class="category-title text-en">
+                                <i class="fas fa-laptop-code"></i> Computer Skills
+                            </h4>
+                            <div class="matrix-tags">
+                                <span class="skill-tag primary text-zh">计算机科学与技术双学位</span>
+                                <span class="skill-tag primary text-en">Computer Science Dual Degree</span>
+                                <span class="skill-tag primary text-zh">MS Office (Word/Excel/PPT) 公文排版与数据处理</span>
+                                <span class="skill-tag primary text-en">MS Office (Word/Excel/PPT)</span>
+                                <span class="skill-tag primary text-zh">Python 编程基础</span>
+                                <span class="skill-tag primary text-en">Python Programming</span>
+                            </div>
+                        </div>
+
+                        <!-- 其他技能 -->
+                        <div class="matrix-category">
+                            <h4 class="category-title text-zh">
+                                <i class="fas fa-certificate"></i> 其他技能
+                            </h4>
+                            <h4 class="category-title text-en">
+                                <i class="fas fa-certificate"></i> Other Skills
+                            </h4>
+                            <div class="matrix-tags">
+                                <span class="skill-tag primary text-zh">机动车驾驶证 (C1 熟练驾驶)</span>
+                                <span class="skill-tag primary text-en">Driver's License (C1)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 学生时代区域 - 学术旅行时间线 -->
+    <section id="student-life" class="student-life">
+        <div class="container">
+            <div class="academic-journey-header">
+                <h2 class="section-title text-zh">教育时光</h2>
+                <h2 class="section-title text-en">Educational Journey</h2>
+                <button class="lang-toggle-academic" id="academicLangToggle">
+                    <span class="lang-option active" data-lang="zh">中文</span>
+                    <span class="lang-divider">|</span>
+                    <span class="lang-option" data-lang="en">EN</span>
+                </button>
+            </div>
+
+            <div class="academic-timeline">
+                <!-- 时间线节点1: 山东科技大学 -->
+                <div class="timeline-node">
+                    <div class="timeline-content">
+                        <div class="timeline-main text-zh">
+                            <h3>2019.09-2023.06</h3>
+                            <h4>山东科技大学</h4>
+                            <p>英语文学学士 + 计算机科学与技术工学学士（第二学位）</p>
+                        </div>
+                        <div class="timeline-main text-en">
+                            <h3>2019.09-2023.06</h3>
+                            <h4>Shandong University of Science and Technology</h4>
+                            <p>Bachelor of Arts in English Literature + Bachelor of Engineering in Computer Science and Technology (Second Degree)</p>
+                        </div>
+                        <div class="timeline-details text-zh">
+                            <div class="detail-item">
+                                <strong>学习能力：</strong>GPA：3.2/4.0 (均分：84.38 综合测评排名：10/94 前 10%)
+                            </div>
+                            <div class="detail-item">
+                                <strong>荣誉奖项：</strong>连续 3 年获得国家励志奖学金(2019-2022), 2023届优秀毕业生，2023届优秀学生标兵，三好学生（2020-2021）
+                            </div>
+                            <div class="detail-item">
+                                <strong>主修课程（第二学位）：</strong>程序设计基础, 离散数学, 面向对象程序设计( Java), 人工智能, 编译原理, 计算机网络, 数据结构，操作系统（具备理工科逻辑思维与编程基础）
+                            </div>
+                        </div>
+                        <div class="timeline-details text-en">
+                            <div class="detail-item">
+                                <strong>Academic Performance:</strong> GPA: 3.2/4.0 (Average: 84.38, Ranking: 10/94, Top 10%)
+                            </div>
+                            <div class="detail-item">
+                                <strong>Honors & Awards:</strong> National Endeavor Scholarship for 3 consecutive years (2019-2022), Outstanding Graduate of Class 2023, Outstanding Student Model of Class 2023, Merit Student (2020-2021)
+                            </div>
+                            <div class="detail-item">
+                                <strong>Core Courses (Second Degree):</strong> Programming Fundamentals, Discrete Mathematics, Object-Oriented Programming (Java), Artificial Intelligence, Compiler Principles, Computer Networks, Data Structures, Operating Systems (STEM logical thinking and programming foundation)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-connector">
+                        <div class="connector-line"></div>
+                        <div class="connector-arrow">↓</div>
+                    </div>
+                </div>
+
+                <!-- 时间线节点2: 华北电力大学 -->
+                <div class="timeline-node">
+                    <div class="timeline-content">
+                        <div class="timeline-main text-zh">
+                            <h3>2023.09-2026.06</h3>
+                            <h4>华北电力大学 (211)</h4>
+                            <p>英语语言文学硕士</p>
+                        </div>
+                        <div class="timeline-main text-en">
+                            <h3>2023.09-2026.06</h3>
+                            <h4>North China Electric Power University (211 Project)</h4>
+                            <p>Master of Arts in English Language and Literature</p>
+                        </div>
+                        <div class="timeline-details text-zh">
+                            <div class="detail-item">
+                                <strong>学习能力：</strong>GPA：4.1/5.0 (均分：91.5 综合测评排名：2/17 前 11%)
+                            </div>
+                            <div class="detail-item">
+                                <strong>荣誉奖项：</strong>第四届能源电力翻译大赛二等奖（熟悉能源电力行业术语,长期处于电力行业学术氛围中）, 一等学业奖学金，志愿服务先进个人，自立自强学子提名
+                            </div>
+                        </div>
+                        <div class="timeline-details text-en">
+                            <div class="detail-item">
+                                <strong>Academic Performance:</strong> GPA: 4.1/5.0 (Average: 91.5, Ranking: 2/17, Top 11%)
+                            </div>
+                            <div class="detail-item">
+                                <strong>Honors & Awards:</strong> Second Prize in the 4th Energy & Power Translation Competition (familiar with energy and power industry terminology, long-term exposure to power industry academic atmosphere), First-Class Academic Scholarship, Outstanding Volunteer Service Individual, Self-Reliance Student Nomination
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-connector">
+                        <div class="connector-line"></div>
+                        <div class="connector-arrow">↓</div>
+                    </div>
+                </div>
+
+                <!-- 时间线节点3: 马来亚大学 -->
+                <div class="timeline-node">
+                    <div class="timeline-content">
+                        <div class="timeline-main text-zh">
+                            <h3>2024.09-2025.03</h3>
+                            <h4>马来亚大学 (QS:58)</h4>
+                            <p>国家公派校际交换生</p>
+                        </div>
+                        <div class="timeline-main text-en">
+                            <h3>2024.09-2025.03</h3>
+                            <h4>University of Malaya (QS:58)</h4>
+                            <p>State-Sponsored Inter-University Exchange Student</p>
+                        </div>
+                        <div class="timeline-details text-zh">
+                            <div class="detail-item">
+                                <strong>区域国别适应性：</strong>深入走访马来西亚（吉隆坡、仙本那）及印度尼西亚（泗水、巴厘岛）等核心经济区，克服热带气候与复杂的语言环境，展现出极强的海外驻派适应能力与抗压能力，能迅速融入东盟文化圈
+                            </div>
+                        </div>
+                        <div class="timeline-details text-en">
+                            <div class="detail-item">
+                                <strong>Regional Adaptability:</strong> In-depth visits to core economic zones in Malaysia (Kuala Lumpur, Semporna) and Indonesia (Surabaya, Bali), overcoming tropical climate and complex language environments, demonstrating strong overseas assignment adaptability and resilience, able to quickly integrate into ASEAN cultural circles
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品展示区域 -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <h2 class="section-title">ls -la ./projects/</h2>
+            <div class="portfolio-grid">
+                <!-- 项目 1：个人作品集网站 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600"
+                            alt="Terminal Portfolio Screenshot">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>终端作品集 | Terminal Portfolio</h3>
+                        <p>// 复古终端风格个人作品集网站，集成Matrix代码雨效果和自定义光标系统</p>
+                        <div class="portfolio-details">
+                            <p class="project-highlights">✨ 核心亮点：</p>
+                            <ul class="feature-list">
+                                <li>动态Matrix代码雨动画（Canvas API）</li>
+                                <li>自定义SVG光标系统（3种类型）</li>
+                                <li>CRT屏幕效果与扫描线</li>
+                                <li>全响应式设计</li>
+                                <li>多设备Favicon支持</li>
+                            </ul>
+                        </div>
+                        <div class="portfolio-tags">
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>JavaScript</span>
+                            <span>Canvas</span>
+                            <span>SVG</span>
+                            <span>Git</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/ihaveaword/Myweb" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> View Code
+                            </a>
+                            <a href="#home" class="project-link">
+                                <i class="fas fa-external-link-alt"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目 2：ZDTrans 桌面翻译工具 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=600"
+                            alt="ZDTrans Translation Tool">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>桌面翻译工具 | ZDTrans</h3>
+                        <p>// 轻量级桌面翻译和文本润色工具，支持全局快捷键和系统托盘常驻</p>
+                        <div class="portfolio-details">
+                            <p class="project-highlights">✨ 核心功能：</p>
+                            <ul class="feature-list">
+                                <li>🚀 全局快捷键：在任何应用中选中文字即可快速翻译</li>
+                                <li>💡 即时弹窗：翻译结果在鼠标附近弹出，无需切换窗口</li>
+                                <li>🎨 简洁美观：半透明无边框窗口，不干扰工作流</li>
+                                <li>🔧 灵活配置：支持多种API（OpenAI、DeepL、火山方舟豆包）</li>
+                                <li>🏷️ 关键词提示：为AI提供专业领域关键词，提高翻译准确度</li>
+                                <li>🖥️ 跨平台支持：Windows、macOS、Linux全平台运行</li>
+                            </ul>
+                        </div>
+                        <div class="portfolio-tags">
+                            <span>Python</span>
+                            <span>PySide6</span>
+                            <span>Qt6</span>
+                            <span>API集成</span>
+                            <span>桌面应用</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/ihaveaword/ZDTrans" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> View Code
+                            </a>
+                        </div>
+                        <div class="project-status">
+                            <span class="status-badge in-progress">In Progress</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目 3：学习记录系统 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600"
+                            alt="Learning System">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>代码片段管理器 | Code Snippets Manager</h3>
+                        <p>// Personal code snippet management system with syntax highlighting</p>
+                        <div class="portfolio-details">
+                            <p class="project-highlights">📚 Key Features:</p>
+                            <ul class="feature-list">
+                                <li>Save and organize code snippets</li>
+                                <li>Multi-language syntax highlighting</li>
+                                <li>Search and filter functionality</li>
+                                <li>LocalStorage persistence</li>
+                            </ul>
+                        </div>
+                        <div class="portfolio-tags">
+                            <span>JavaScript</span>
+                            <span>LocalStorage</span>
+                            <span>Highlight.js</span>
+                            <span>UI/UX</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="status-badge planned">Planned</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI对话界面区域 -->
+    <section id="ai-chat" class="ai-chat">
+        <div class="container">
+            <h2 class="section-title">./ai_assistant.sh</h2>
+            <p class="section-subtitle">// Talk with my AI assistant to learn more about me</p>
+
+            <!-- 预设问题 -->
+            <div class="quick-questions">
+                <button class="quick-question" data-question="介绍一下你自己">whoami</button>
+                <button class="quick-question" data-question="你的技能和专长是什么？">cat skills.txt</button>
+                <button class="quick-question" data-question="展示你的证书和荣誉">ls certificates/</button>
+                <button class="quick-question" data-question="如何联系你？">cat contact.md</button>
+            </div>
+
+            <!-- 对话窗口 -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai-message">
+                        <div class="message-avatar">AI</div>
+                        <div class="message-content">
+                            <div class="message-text">Hello! I'm the AI assistant. How can I help you? Feel free to ask
+                                me about skills, projects, or anything else.</div>
+                            <div class="message-time">now</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 正在输入指示器 -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="message-avatar">AI</div>
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <!-- 输入区域 -->
+                <div class="chat-input-container">
+                    <textarea id="chatInput" class="chat-input" placeholder="Type your command here..."
+                        rows="1"></textarea>
+                    <button class="send-btn" id="sendBtn">SEND</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚区域 -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span class="contact-text" id="emailText">z13503876281@163.com</span>
+                        <button class="copy-btn" id="emailCopyBtn" title="Copy email">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span class="contact-text">Beijing, China</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span class="contact-text">North China Electric Power University</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span class="contact-text">M.S. in Information & Communication Engineering</span>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#about">./about</a></li>
+                        <li><a href="#portfolio">./projects</a></li>
+                        <li><a href="#student-life">./memories</a></li>
+                        <li><a href="#ai-chat">./ai_chat</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Get In Touch</h3>
+                    <p class="footer-description">Feel free to reach out for collaborations or just a friendly chat!</p>
+                    <div class="contact-buttons">
+                        <a href="mailto:z13503876281@163.com" class="contact-button">
+                            <i class="fas fa-paper-plane"></i> Send Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="https://github.com/ihaveaword" target="_blank" class="social-link" aria-label="GitHub"
+                    title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://blog.csdn.net/ZHY0091" target="_blank" class="social-link" aria-label="CSDN"
+                    title="CSDN Blog">
+                    <i class="fas fa-blog"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/yourprofile" target="_blank" class="social-link"
+                    aria-label="LinkedIn" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://twitter.com/yourhandle" target="_blank" class="social-link" aria-label="Twitter"
+                    title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.instagram.com/yourhandle" target="_blank" class="social-link"
+                    aria-label="Instagram" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 ZHY. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">privacy</a>
+                    <a href="#">terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Highlight.js & Marked.js - 国内 CDN 优先，失败则使用本地备份 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+        onerror="this.onerror=null;this.src='vendor/js/highlight.min.js'"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/11.1.1/marked.min.js"
+        onerror="this.onerror=null;this.src='vendor/js/marked.min.js'"></script>
+    <!-- Custom JS - 先加载公共脚本，再加载页面专用脚本 -->
+    <script src="js/common.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>
